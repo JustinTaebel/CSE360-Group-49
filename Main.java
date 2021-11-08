@@ -270,45 +270,52 @@ public class Main extends Application {
 		// ===================================== Doctor Exam ===================================== //
 		
 		// --------- Asset Definition -------- //
-		Label doctorPhysicalLabel = new Label("Physical Test Findings:");
-		doctorPhysicalLabel.setFont(new Font("Arial", 20));
+		Label doctorExamLabel = new Label("Examination:");
+		doctorExamLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorExamFindingsLabel = new Label("Physical Test Findings:");
+		doctorExamFindingsLabel.setFont(new Font("Arial", 16));
 		
 		TextField doctorPhysicalField = new TextField();
-		doctorPhysicalLabel.setFont(new Font("Arial", 12));
 		doctorPhysicalField.setPromptText("Enter Physical Findings");
 		
 		Label doctorPrescriptionsLabel = new Label("Prescriptions:");
-		doctorPrescriptionsLabel.setFont(new Font("Arial", 20));
+		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
 		
 		TextField doctorPrescriptionsField = new TextField();
-		doctorPrescriptionsField.setFont(new Font("Arial", 12));
 		doctorPrescriptionsField.setPromptText("Enter Prescriptions");
+		
+		Button doctorExamSaveButton = new Button("Save and Continue");
+		doctorExamSaveButton.setFont(new Font("Arial", 20));
 		
 		// -------- doctorExamGrid ------- //
 		GridPane doctorExamGrid = new GridPane();
-		doctorExamGrid.add(doctorPhysicalLabel, 0, 0);
+		doctorExamGrid.add(doctorExamFindingsLabel, 0, 0);
 		doctorExamGrid.add(doctorPhysicalField, 1, 0);
 		doctorExamGrid.add(doctorPrescriptionsLabel, 0, 1);
 		doctorExamGrid.add(doctorPrescriptionsField, 1, 1);
 		
+		// -------- doctorExamVBox ------- //
+		VBox doctorExamVBox = new VBox();
+		doctorExamVBox.getChildren().addAll(doctorExamLabel, doctorExamGrid, doctorExamSaveButton);
 		
 		// -------- doctorBorder Manipulation -------- //
-		doctorBorder.setCenter(doctorExamGrid);
+		doctorBorder.setCenter(doctorExamVBox);
 		
 		// ===================================== Doctor History ===================================== //
 		
 		// --------- Asset Definition -------- //
 		Label doctorPatientHistoryLabel = new Label("Patient History:");
-		doctorPhysicalLabel.setFont(new Font("Arial", 20));
+		doctorPatientHistoryLabel.setFont(new Font("Arial", 20));
 		
 		Label doctorPriorHealthIssuesLabel = new Label("Prior Health Issues:");
-		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
+		doctorPriorHealthIssuesLabel.setFont(new Font("Arial", 16));
 		
 		Label doctorPriorMedicationsLabel = new Label("Prior Medications:");
-		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
+		doctorPriorMedicationsLabel.setFont(new Font("Arial", 16));
 		
 		Label doctorImmRecordsLabel = new Label("Immunization Records:");
-		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
+		doctorImmRecordsLabel.setFont(new Font("Arial", 16));
 		
 		// -------- doctorHistoryVBox ------- //
 		VBox doctorHistoryVBox = new VBox();
@@ -384,7 +391,7 @@ public class Main extends Application {
 		
 		// ================================== Doctor Button Functions ================================= //
 		doctorExamButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorExamGrid);
+			doctorBorder.setCenter(doctorExamVBox);
 		});
 		doctorHistoryButton.setOnAction(e -> {
 			doctorBorder.setCenter(doctorHistoryVBox);
@@ -397,6 +404,15 @@ public class Main extends Application {
 		});
 		doctorVisitSummaryButton.setOnAction(e -> {
 			doctorBorder.setCenter(doctorVisitSummaryVBox);
+		});
+		doctorExamSaveButton.setOnAction(e -> {
+			doctorBorder.setCenter(doctorHistoryVBox);
+			// SAVE STUFF HERE
+			doctorPhysicalField.setText(doctorPhysicalField.getText());
+			doctorPrescriptionsField.setText(doctorPrescriptionsField.getText());
+		});
+		doctorVisitSummarySaveButton.setOnAction(e -> {
+			doctorBorder.setCenter(doctorMessagesVBox);
 			// SAVE STUFF HERE
 			doctorVisitSummaryField.setText(doctorVisitSummaryField.getText());
 		});
