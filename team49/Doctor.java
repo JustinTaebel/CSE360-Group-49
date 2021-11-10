@@ -1,71 +1,65 @@
 package team49;
 
+import java.io.IOException;
+
 public class Doctor implements Employee {
 	
-	final int maxPatients = 10;
-	final int maxNursesPerDoctor = 2;
-	String empID; //Format #####
-	private Patient[] assignedPatients = new Patient[maxPatients];
-	private Nurse[] assignedNurses = new Nurse[maxNursesPerDoctor];
+	private int maxPatients = 10;
+	private int maxNursesPerDoctor = 2;
+	String doctorEmpID; //Format D#####
+	private String[] assignedPatients = new String[maxPatients];
+	private String[] assignedNurses = new String[maxNursesPerDoctor];
 	
 	//login information
 	//username is empID
 	String password;
 	
 	
-	public Doctor(String id) {
-		empID = id;
+	public Doctor(String id) throws IOException {
+		doctorEmpID = id;
 		
+	}	
+	
+	
+
+
+	public void setExamResults(Patient patient, String examResults) {
+		patient.physicalExamResults = examResults;
+	}
+	public String[] getAssignedPatients() {
+		return assignedPatients;
 	}
 
-	
-	public void setExamResults(Patient patient, String examResults) {
-		patient.physcialExamResults = examResults;
+	public String[] getAssignedNurses() {
+		return assignedNurses;
 	}
 	
+	
+	
+	
+	//Data Storage Format
 	public String[] generateStorageArray() {
 		String[] data = new String[14];
-		data[0] = empID;
+		data[0] = doctorEmpID;
 		data[1] = password;
-		data[2] = "Assigned Patients Data Begins";
-		data[3] = assignedPatients[0].patientID;
-		data[4] = assignedPatients[1].patientID;
-		data[5] = assignedPatients[2].patientID;
-		data[6] = assignedPatients[3].patientID;
-		data[7] = assignedPatients[4].patientID;
-		data[8] = assignedPatients[5].patientID;
-		data[9] = assignedPatients[6].patientID;
-		data[10] = assignedPatients[7].patientID;
-		data[11] = assignedPatients[8].patientID;
-		data[12] = assignedPatients[9].patientID;
-		data[13] = "Assigned Nurses Data Begins";
-		data[14] = assignedNurses[0].empID;
-		data[15] = assignedNurses[1].empID;
+		data[2] = "Assigned Patients Data Begins";  //list begin
+		data[3] = assignedPatients[0];
+		data[4] = assignedPatients[1];
+		data[5] = assignedPatients[2];
+		data[6] = assignedPatients[3];
+		data[7] = assignedPatients[4];
+		data[8] = assignedPatients[5];
+		data[9] = assignedPatients[6];
+		data[10] = assignedPatients[7];
+		data[11] = assignedPatients[8];
+		data[12] = assignedPatients[9];
+		data[13] = "Assigned Nurses Data Begins";  //list end
+		data[14] = assignedNurses[0];
+		data[15] = assignedNurses[1];
 		
 		return data;
 		
 	}
 	
-	
-	/*
-	 * Gui methods are intended to be a launch point for different graphical elements
-	 */
-
-	//****************************GUI METHODS*****************************************	
-	
-	public void viewPatientHistory(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void viewPatientContactInformation(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void viewPreviousExamination(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

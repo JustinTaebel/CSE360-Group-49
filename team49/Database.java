@@ -10,11 +10,11 @@ import java.util.Scanner;
 
 public class Database {
 	
-	String owner;   //Expects the username of a nurse, doctor, or patient
-	String fileName;
-	File file;
-	FileWriter outFile;
-	Scanner inFile;
+	
+	private String fileName;
+	private File file;
+	private FileWriter outFile;
+	private Scanner inFile;
 	
 	
 	
@@ -23,6 +23,10 @@ public class Database {
 	 * Doctor, Nurse, and Patient classes are still under development
 	 * Author: Zachary Heidemann
 	 */
+	
+	public Database() {
+		fileName = null;
+	}
 	
 	//constuctor creates text file if one doesn't already exist
 	public Database(String patientID) throws IOException {
@@ -66,9 +70,10 @@ public class Database {
 	}
 	
 	//selects a specific piece of data based on a given index and returns its string
-	public String selectData(int index) throws FileNotFoundException {	
+	private String selectData(int index) throws FileNotFoundException {	
 		return getCurrentData()[index];
 	}
+	
 	
 	//wipes the file and prepares to update/rewrite data
 	private void clearFile() throws IOException {
@@ -79,5 +84,23 @@ public class Database {
 		}	
 		outFile.close();
 	}
+	
+	public boolean checkPassword(String pass) throws FileNotFoundException {
+		if(selectData(1).equals(pass)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public void changeFile(String id) {
+		fileName = id;
+	}
+	
+	public String getCurrentFileName() {
+		return fileName;
+	}
+
+	
 
 }

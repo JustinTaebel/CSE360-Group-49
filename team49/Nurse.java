@@ -2,18 +2,18 @@ package team49;
 
 public class Nurse implements Employee{
 
-	String empID; //Format #####
-	Doctor currentAssignedDoctor;
+	String nurseEmpID; //Format #####
+	String assignedDoctorEmpID;
 	
 	//login information
 	//username is empID
 	String password;
 	
-	private Patient[] assignedPatients = new Patient[currentAssignedDoctor.maxPatients];
+	private String[] assignedPatients = new String[10];
 	
-	public Nurse(String id, Doctor assignedDoctor, String passwordString) {
-		empID = id;
-		currentAssignedDoctor = assignedDoctor;
+	public Nurse(String id, String assignedDoctor, String passwordString) {
+		nurseEmpID = id;
+		assignedDoctorEmpID = assignedDoctor;
 		password = passwordString;
 	}
 	
@@ -37,38 +37,15 @@ public class Nurse implements Employee{
 	
 
 
+	//Data Storage Format
 	public String[] generateStorageArray() {
 		String[] data = new String[3];
-		data[0] = empID;
-		data[1] = currentAssignedDoctor.empID;
-		data[2] = password;
+		data[0] = nurseEmpID;
+		data[1] = password;
+		data[2] = assignedDoctorEmpID;
 		
 		return data;
  	}
 
-	
-	/*
-	 * Gui methods are intended to be a launch point for different graphical elements
-	 */
-
-	//**************************************GUI METHODS************************************************
-	public void viewPatientHistory(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-
-	public void viewPatientContactInformation(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
-
-	public void viewPreviousExamination(Patient patient) {
-		// TODO Auto-generated method stub
-		
-	}
 }
+
