@@ -3,25 +3,30 @@ package team49;
 public class Nurse implements Employee{
 
 	String nurseEmpID; //Format #####
-	String assignedDoctorEmpID;
+	String assignedDoctorEmpID, selectedPatient;
 	
 	//login information
 	//username is empID
 	String password;
 	
-	private String[] assignedPatients = new String[10];
 	
-	public Nurse(String id, String assignedDoctor, String passwordString) {
-		nurseEmpID = id;
-		assignedDoctorEmpID = assignedDoctor;
-		password = passwordString;
+	
+	public Nurse() {
+		nurseEmpID = null;
+		assignedDoctorEmpID = null;
 	}
 	
 	
-	public void setVitals(Patient patient, double weight, double temperature, String bp) {
+	public Nurse(String id) {
+		nurseEmpID = id;
+	}
+	
+	
+	public void setVitals(Patient patient, double weight, double temperature, String bp, String height) {
 		
 		patient.currentWeight = weight;
 		patient.currentTemperature = temperature;
+		patient.currentHeight = height;
 		if(patient.currentAge > 12) {
 			patient.bloodPressure = bp;
 		}else {

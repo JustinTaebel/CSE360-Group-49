@@ -6,18 +6,27 @@ public class Doctor implements Employee {
 	
 	private int maxPatients = 10;
 	private int maxNursesPerDoctor = 2;
-	String doctorEmpID; //Format D#####
+	
 	private String[] assignedPatients = new String[maxPatients];
 	private String[] assignedNurses = new String[maxNursesPerDoctor];
 	
-	//login information
-	//username is empID
+
+	
+	String doctorEmpID; //Format D#####  (empId is doctors username)
 	String password;
 	
-	
-	public Doctor(String id) throws IOException {
-		doctorEmpID = id;
-		
+	public Doctor() {
+		doctorEmpID = null;
+	}
+	public Doctor(String[] data, int patientArrayStart, int patientArrayEnd) throws IOException {
+		//Constructor loads doctor data from database, and places it in the correct variables/arrays
+		doctorEmpID = data[0];
+		password = data[1];
+		for(int i = patientArrayStart; i < patientArrayEnd; i++) {
+			assignedPatients[i - patientArrayStart] = data[i];
+		}
+		assignedNurses[0] = data[14];
+		assignedNurses[1] = data[15];
 	}	
 	
 	
@@ -34,6 +43,10 @@ public class Doctor implements Employee {
 		return assignedNurses;
 	}
 	
+	
+	public void addPatient(String id, int index) {
+		assignedPatients[index] = id;
+	}
 	
 	
 	

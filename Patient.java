@@ -10,7 +10,7 @@ public class Patient {
 	//Patient information variables
 	public String firstName, lastName, patientID, DOB, phoneNumber, insuranceInformation, pharmacyInformation, 
 		   currentMedications, immunizations, currentHealthIssues, bloodPressure, currentAllergies,
-		   currentHealthConcerns, physicalExamResults;
+		   currentHealthConcerns, physicalExamResults, currentHeight;
 	int currentAge;
 	boolean isNew = true;
 	private String password;
@@ -70,7 +70,7 @@ public class Patient {
 		data[15] = currentAllergies;
 		data[16] = currentHealthConcerns;
 		data[17] = physicalExamResults;
-		
+		data[18] = currentHeight;
 		return data;
 	}
 	

@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -16,9 +17,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
@@ -29,6 +32,11 @@ public class GUI extends Application {
 	Scene loginPageScene, createAccountScene, doctorSelectPatientScene, doctorScene,
 			nurseSelectPatientScene, nurseScene, patientScene;
 	Database database = new Database();
+	Nurse nurse = new Nurse();
+	Doctor doctor = new Doctor();
+	String id; //current logged in user
+	
+
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -66,34 +74,46 @@ public class GUI extends Application {
 		loginPasswordField.setFont(new Font("Arial", 20));
 		loginPasswordField.setPromptText("Password");
 		
+		Label loginFailed = new Label("Username/Password is incorrect.");
+		loginFailed.setTextFill(Color.RED);
+		loginFailed.setVisible(false);
+		
 		Button loginButton = new Button("Login");
 		loginButton.setFont(new Font("Arial", 20));
 		loginButton.setDefaultButton(true);
 		loginButton.setOnAction(e -> {
 
-		database.changeFile(loginUsernameField.getText());
+		
 		try {
+			id = loginUsernameField.getText();
+			database.changeFile(id);
 			if(database.checkPassword(loginPasswordField.getText())) {
 				if(database.getCurrentFileName().substring(0,1).equals("P")) {
 					window.setScene(patientScene);
 				}else if(database.getCurrentFileName().substring(0,1).equals("D")) {
 					window.setScene(doctorSelectPatientScene);
+					doctor.doctorEmpID = id;
 				}else if(database.getCurrentFileName().substring(0,1).equals("N")) {
+					nurse.nurseEmpID = id;
 					window.setScene(nurseSelectPatientScene);
 				}
+			}else {
+				loginFailed.setVisible(true);
 			}
-		} catch (FileNotFoundException e1) {
+		} catch (IOException e1) {
+			loginFailed.setVisible(true);
 			e1.printStackTrace();
 		}
 
 });
 		
 
-		
+
 		Button loginCreateButton = new Button("Create Account");
 		loginCreateButton.setFont(new Font("Arial", 20));
 		loginCreateButton.setOnAction(e -> {
 			window.setScene(createAccountScene);
+
 		});
 		
 		
@@ -105,10 +125,11 @@ public class GUI extends Application {
 		loginGrid.setVgap(20);
 		loginGrid.setPadding(new Insets(10, 10, 10, 40));
 		
-		loginGrid.add(loginUsernameLabel, 1, 1);
-		loginGrid.add(loginUsernameField, 2, 1);
-		loginGrid.add(loginPasswordLabel, 1, 2);
-		loginGrid.add(loginPasswordField, 2, 2);
+		loginGrid.add(loginUsernameLabel, 1, 2);
+		loginGrid.add(loginUsernameField, 2, 2);
+		loginGrid.add(loginPasswordLabel, 1, 3);
+		loginGrid.add(loginPasswordField, 2, 3);
+		loginGrid.add(loginFailed, 2, 1);
 		
 		
 		// ------------ Login Vbox ------------ //
@@ -179,37 +200,36 @@ public class GUI extends Application {
 				
 				//When the Create button is pressed, patient data is written to database. Text file is named in
 				//the following format P(PatientID)
-
-			
 				Button CACreateButton = new Button("Create");
 				CACreateButton.setFont(new Font("Arial", 20));
 				CACreateButton.setMinWidth(300);
 				CACreateButton.setDefaultButton(true);
 				CACreateButton.setOnAction(e ->{
 					
-					
-					
-				Patient newPatient = null;
-				try {
-					newPatient = new Patient(CAFirstNameField.getText(), CALastNameField.getText(), CADateOfBirthField.getText(), 
-								CAPhoneNumField.getText(), "P" + CADateOfBirthField.getText().substring(6),
-								2021 - Integer.parseInt(CADateOfBirthField.getText().substring(6)), CAPasswordField.getText());
-				} catch (NumberFormatException | IOException e2) {
-					e2.printStackTrace();
-				}
+					Patient newPatient = null;
 					try {
-						database.changeFile(newPatient.patientID);
-						database.dataWrite(newPatient.generateStorageArray());
-					} catch (IOException e1) {
-						e1.printStackTrace();
+						newPatient = new Patient(CAFirstNameField.getText(), CALastNameField.getText(), CADateOfBirthField.getText(), 
+									CAPhoneNumField.getText(), "P" + CADateOfBirthField.getText().substring(6),
+									2021 - Integer.parseInt(CADateOfBirthField.getText().substring(6)), CAPasswordField.getText());
+					} catch (NumberFormatException | IOException e2) {
+						e2.printStackTrace();
 					}
-					CAFirstNameField.clear();
-					CALastNameField.clear();
-					CADateOfBirthField.clear();
-					CAPhoneNumField.clear();
-					CAPasswordField.clear();
-					window.setScene(loginPageScene);
-			});
+						try {
+			
+							database.newPatient(newPatient.patientID);
+							database.changeFile(newPatient.patientID);
+							database.dataWrite(newPatient.generateStorageArray());
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						CAFirstNameField.clear();
+						CALastNameField.clear();
+						CADateOfBirthField.clear();
+						CAPhoneNumField.clear();
+						CAPasswordField.clear();
+						loginFailed.setVisible(false);
+						window.setScene(loginPageScene);
+				});
 				
 				
 				
@@ -218,6 +238,7 @@ public class GUI extends Application {
 				Button CABackButton = new Button("Back To Login");
 				CABackButton.setFont(new Font("Arial", 14));
 				CABackButton.setOnAction(e -> {
+					loginFailed.setVisible(false);
 					window.setScene(loginPageScene);
 				});
 				
@@ -265,11 +286,21 @@ public class GUI extends Application {
 		
 		// ===================================== Doctor Select Patient ===================================== //
 		// ------------ Asset Definition ------------ //
+		
 		ComboBox<String> doctorPatientListCombo = new ComboBox<String>();
 		doctorPatientListCombo.setPromptText("Select Patient");
-		// for patient in patientList:
-		// doctorPatientListCombo.add(patient.getName());
-		doctorPatientListCombo.getItems().addAll("George Person");
+		File patients = new File("src/team49/Database/");
+		File[] currentPatients = patients.listFiles();
+		for(int i = 0; i < currentPatients.length; i++) {
+			String fileName = currentPatients[i].getName();
+			if(fileName.charAt(0) == 80) {
+				database.changeFile(fileName.substring(0, 5));
+				String patientFirstName = database.getCurrentData()[2];
+				String patientLastName = database.getCurrentData()[3];
+				doctorPatientListCombo.getItems().addAll(fileName.substring(0, 5) + " - " + patientFirstName + " " + patientLastName);
+			}
+		}
+		database.changeFile(id);
 
 		Button doctorPatientNextButton = new Button("Next");
 		doctorPatientNextButton.setFont(new Font("Arial", 14));
@@ -278,7 +309,7 @@ public class GUI extends Application {
 			window.setScene(doctorScene);
 		});
 		
-		Label doctorWelcomeLabel = new Label("Hello Dr. (name) - Which patient are you seeing today?"); 
+		Label doctorWelcomeLabel = new Label("Hello Dr." + "(name)" + "- Which patient are you seeing today?"); 
 		doctorWelcomeLabel.setFont(new Font("Arial", 20));
 		
 		// ----------- doctorSelectPatientGrid ---------- //
@@ -495,20 +526,53 @@ public class GUI extends Application {
 		// ------------ Asset Definition ------------ //
 		ComboBox<String> nursePatientListCombo = new ComboBox<String>();
 		nursePatientListCombo.setPromptText("Select Patient");
-		// for patient in patientList:
-		// doctorPatientListCombo.add(patient.getName());
-		nursePatientListCombo.getItems().addAll("George Person");
-
+		
+		File patientsNurse = new File("src/team49/Database/");
+		File[] currentPatientsNurse = patientsNurse.listFiles();
+		for(int i = 0; i < currentPatientsNurse.length; i++) {
+			String fileName = currentPatientsNurse[i].getName();
+			if(fileName.charAt(0) == 80) {
+				database.changeFile(fileName.substring(0, 5));
+				String patientFirstNameNurse = database.getCurrentData()[2];
+				String patientLastNameNurse = database.getCurrentData()[3];
+				nursePatientListCombo.getItems().addAll(fileName.substring(0, 5) + " - " + patientFirstNameNurse + " " + patientLastNameNurse);
+			}
+		}
+		database.changeFile(id);
 		Button nursePatientNextButton = new Button("Next");
 		nursePatientNextButton.setFont(new Font("Arial", 14));
+		
+		
 		nursePatientNextButton.setOnAction(e -> {
-			// currentPatient = patient
-			window.setScene(nurseScene);
+			nurse.selectedPatient = nursePatientListCombo.getValue(); 
+			if(nurse.selectedPatient != null) {
+				window.setScene(nurseScene);
+				String[] data = new String[2];
+				database.changeFile("pageFile");
+				data[0] = nurse.selectedPatient;
+				data[1] = id;
+				try {
+					database.dataWrite(data);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		});
 		
-		Label nurseWelcomeLabel = new Label("Hello (name) - Which patient are you seeing today?"); 
+		//-------------------------------------------------------------------------------------------
+		//data gets wiped at this point, so data was saved to database and retrived to avoid data loss
+		Database database = new Database("pageFile");
+		String[] data = database.getCurrentData();
+		
+		
+		
+		
+		
+		Label nurseWelcomeLabel = new Label("Hello " + "" + " - Which patient are you seeing today?"); 
 		nurseWelcomeLabel.setFont(new Font("Arial", 20));
 		
+		
+
 		// ----------- nurseSelectPatientVBox ---------- //
 		VBox nurseSelectPatientVBox = new VBox();
 		nurseSelectPatientVBox.setPadding(new Insets(40, 40, 40, 40));
@@ -518,10 +582,7 @@ public class GUI extends Application {
 		nurseSelectPatientScene = new Scene(nurseSelectPatientVBox, 600, 700);
 		
 		// ================================= General nurseScene ================================= //
-		
 		// ---------- Assets ------- //
-		Label nursePatientNameLabel = new Label("            Patient Name");
-		nursePatientNameLabel.setFont(new Font("Arial", 20));
 		
 		Button nurseVitalsButton = new Button("Vitals");
 		nurseVitalsButton.setFont(new Font("Arial", 16));
@@ -538,8 +599,6 @@ public class GUI extends Application {
 		Button nurseMessagesButton = new Button("Messages");
 		nurseMessagesButton.setFont(new Font("Arial", 16));
 		
-		Button nurseSelectDifPatientButton = new Button("Select A Different Patient");
-		nurseSelectDifPatientButton.setFont(new Font("Arial", 20));
 		
 		// BUTTON FUNCTION AT BOTTOM OF NURSE PAGE //
 		
@@ -552,10 +611,7 @@ public class GUI extends Application {
 		// ----------- nurseBorder ---------- //
 		BorderPane nurseBorder = new BorderPane();
 		nurseBorder.setPadding(new Insets(10, 10, 10, 10));
-		nurseBorder.setTop(nursePatientNameLabel);
 		nurseBorder.setLeft(nurseMenuVBox);
-		nurseBorder.setBottom(nurseSelectDifPatientButton);
-		
 		// ---------- Scene Stuff ------------ //
 		nurseScene = new Scene(nurseBorder, 600, 700);
 		
@@ -748,10 +804,50 @@ public class GUI extends Application {
 		nurseVitalsSaveButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseConcernsVBox);
 			// SAVE STUFF
+			String[] names = null;
+			try {
+				names = database.getCurrentData();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			database.changeFile(names[0].substring(0,5));
+			
+			String[] patientData = null;
+			try {
+				patientData = database.getCurrentData();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			
+		
+			String weight, height, bodyTemp, bloodPressure;
+			weight = nurseWeightField.getText();
+			height = nurseHeightField.getText();
+			bodyTemp = nurseBodyTempField.getText();
+			bloodPressure = nurseBloodPressureField.getText();
+			
+			try {
+				Patient currentPatient = new Patient(patientData[2], patientData[3], patientData[4], patientData[6],
+						patientData[0], Integer.parseInt(patientData[4].substring(6)), data[1]);
+				Nurse currentNurse = new Nurse(names[1]);
+				currentNurse.setVitals(currentPatient, Double.parseDouble(weight), Double.parseDouble(bodyTemp), bloodPressure, height);
+				database.dataWrite(currentPatient.generateStorageArray());
+			} catch (NumberFormatException | IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+			
+			
 			nurseWeightField.setPromptText(nurseWeightField.getText());
 			nurseHeightField.setPromptText(nurseHeightField.getText());
 			nurseBodyTempField.setPromptText(nurseBodyTempField.getText());
 			nurseBloodPressureField.setPromptText(nurseBloodPressureField.getText());
+			
+			
+			
+			
+			
 		});
 		nurseConcernsSaveButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseHistoryVBox);
@@ -760,9 +856,7 @@ public class GUI extends Application {
 			nurseKnownConcernsField.setPromptText(nurseKnownConcernsField.getText());
 		});
 		
-		nurseSelectDifPatientButton.setOnAction(e -> {
-			window.setScene(nurseSelectPatientScene);
-		});
+
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////
@@ -915,9 +1009,7 @@ public class GUI extends Application {
 			
 		});
 		
-		nurseSelectDifPatientButton.setOnAction(e -> {
-			window.setScene(nurseSelectPatientScene);
-		});
+
 		
 		//////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////
