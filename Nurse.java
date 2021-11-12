@@ -1,6 +1,6 @@
 package team49;
 
-public class Nurse implements Employee{
+public class Nurse {
 	
 	//login information
 	String nurseEmpID, assignedDoctorEmpID, password, firstName, lastName, patientFile;

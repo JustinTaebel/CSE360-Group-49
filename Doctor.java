@@ -1,6 +1,6 @@
 package team49;
 
-public class Doctor implements Employee {
+public class Doctor {
 	
 	
 	//login information
