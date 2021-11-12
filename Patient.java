@@ -1,26 +1,28 @@
 package team49;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Patient {
 	
-	//This is the amount of data members that need to be stored in text file
-	final int arraySize = 30;
 	
 	//Patient information variables
 	public String firstName, lastName, patientID, DOB, phoneNumber, insuranceInformation, pharmacyInformation, 
-		   currentMedications, immunizations, currentHealthIssues, bloodPressure, currentAllergies,
-		   currentHealthConcerns, physicalExamResults, email;
+		   medications, priorImmunizations, priorHealthIssues, bloodPressure, currentAllergies,
+		   currentHealthConcerns, physicalExamResults, email, messageFile, currentWeight, currentTemperature,
+		   currentHeight, visitSummariesFile;
 	int currentAge;
 	boolean isNew = true;
 	private String password;
-	double currentWeight, currentTemperature;
 	
-	//Array for storing messages in patient inbox 
-	String[] messages = new String[10];
+	// Arraylist for messages
+	ArrayList<String> messageList;
+	
+	ArrayList<String> visitSummariesList;
 	
 
-	public Patient(String first, String last, String dateOfBirth, String phone, String emailin, String id, int age, String pharmacy, String insurance, String pass) throws IOException {
+	public Patient(String first, String last, String dateOfBirth, String phone, String emailin, String id, int age, String pharmacy, String insurance, String pass,
+			String mFile, String vFile, String med, String pImm, String pIssues) throws IOException {
 		
 		firstName = first;
 		lastName = last;
@@ -32,29 +34,18 @@ public class Patient {
 		insuranceInformation = insurance;
 		password = pass;
 		email = emailin;
-		
-	}
-	
-
-	public void setCurrentMedications(String medications) {
-		currentMedications = medications;
-	}
-	public void setImmunizations(String immune) {
-		immunizations = immune;
-	}
-	public void setCurrentHealthIssues(String healthIssues) {
-		currentHealthIssues = healthIssues;
-	}
-	public void sendPatientMessage(String empID) {
-		//TODO
-		
+		messageFile = mFile;
+		messageList = new ArrayList<String>();
+		visitSummariesFile = vFile;
+		visitSummariesList = new ArrayList<String>();
+		medications = med;
+		priorImmunizations = pImm;
+		priorHealthIssues = pIssues;
 	}
 
-
-	
 	//Data Storage Format
 	public String[] generateStorageArray() {
-		String[] data = new String[arraySize];
+		String[] data = new String[30];
 		data[0] = patientID;
 		data[1] = password;
 		data[2] = firstName;
@@ -64,16 +55,19 @@ public class Patient {
 		data[6] = phoneNumber;
 		data[7] = insuranceInformation;
 		data[8] = pharmacyInformation;
-		data[9] = currentMedications;
-		data[10] = immunizations;
-		data[11] = currentHealthIssues;
-		data[12] = Double.toString(currentWeight);
-		data[13] = Double.toString(currentTemperature);
+		data[9] = medications;
+		data[10] = priorImmunizations;
+		data[11] = priorHealthIssues;
+		data[12] = currentWeight;
+		data[13] = currentTemperature;
 		data[14] = bloodPressure;
 		data[15] = currentAllergies;
 		data[16] = currentHealthConcerns;
 		data[17] = physicalExamResults;
 		data[18] = email;
+		data[19] = messageFile;
+		data[20] = currentHeight;
+		data[21] = visitSummariesFile;
 		
 		return data;
 	}

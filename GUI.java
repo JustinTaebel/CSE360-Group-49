@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
@@ -35,6 +36,8 @@ public class GUI extends Application {
 	Database database = new Database();
 	Patient currentPatient;
 	Nurse currentNurse;
+	Doctor currentDoctor;
+	String text;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -47,6 +50,337 @@ public class GUI extends Application {
 		
 		//////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////
+		// --------------------------------- Doctor Page ---------------------------------- //
+		//////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////
+		
+		// ===================================== Doctor Select Patient ===================================== //
+		// ------------ Asset Definition ------------ //
+		ComboBox<String> doctorPatientListCombo = new ComboBox<String>();
+		doctorPatientListCombo.setPromptText("Select Patient");
+
+		Button doctorPatientNextButton = new Button("Next");
+		doctorPatientNextButton.setFont(new Font("Arial", 14));
+		
+		Label doctorWelcomeLabel1 = new Label("Hello Dr. (name) - Which patient are you seeing today?"); 
+		doctorWelcomeLabel1.setFont(new Font("Arial", 20));
+		
+		Label doctorWelcomeLabel2 = new Label("Hello Dr. (name) - Which patient are you seeing today?"); 
+		doctorWelcomeLabel2.setFont(new Font("Arial", 20));
+		
+		// ----------- doctorSelectPatientGrid ---------- //
+		VBox doctorSelectPatientVBox = new VBox();
+		doctorSelectPatientVBox.setPadding(new Insets(40, 40, 40, 40));
+		doctorSelectPatientVBox.getChildren().addAll(doctorWelcomeLabel1, doctorWelcomeLabel2, doctorPatientListCombo, doctorPatientNextButton);
+		
+		// ---------- Scene Default ---------- //
+		doctorSelectPatientScene = new Scene(doctorSelectPatientVBox, 600, 700);
+		
+		// ================================= General doctorScene ================================= //
+		
+		// ---------- Assets ------- //
+		Label doctorPatientNameLabel = new Label("            Patient Name");
+		doctorPatientNameLabel.setFont(new Font("Arial", 20));
+		
+		Button doctorExamButton = new Button("Examination");
+		doctorExamButton.setFont(new Font("Arial", 16));
+		
+		Button doctorPatientHistoryButton = new Button("History");
+		doctorPatientHistoryButton.setFont(new Font("Arial", 16));
+		
+		Button doctorContactInfoButton = new Button("Contact Information");
+		doctorContactInfoButton.setFont(new Font("Arial", 16));
+		
+		Button doctorVisitSummaryButton = new Button("Visit Summary");
+		doctorVisitSummaryButton.setFont(new Font("Arial", 16));
+		
+		Button doctorMessagesButton = new Button("Messages");
+		doctorMessagesButton.setFont(new Font("Arial", 16));
+		
+		Button doctorSelectDifPatientButton = new Button("Select A Different Patient");
+		doctorSelectDifPatientButton.setFont(new Font("Arial", 20));
+		
+		// BUTTON FUNCTION AT BOTTOM OF DOCTOR PAGE //
+		
+		// ------------ doctorMenuVBox ----------- //
+		VBox doctorMenuVBox = new VBox();
+		doctorMenuVBox.setPadding(new Insets(10, 10, 10, 10));
+		doctorMenuVBox.getChildren().addAll(doctorExamButton, doctorPatientHistoryButton, doctorContactInfoButton,
+											doctorVisitSummaryButton, doctorMessagesButton);
+		
+		// ----------- doctorBorder ---------- //
+		BorderPane doctorBorder = new BorderPane();
+		doctorBorder.setPadding(new Insets(10, 10, 10, 10));
+		doctorBorder.setTop(doctorPatientNameLabel);
+		doctorBorder.setLeft(doctorMenuVBox);
+		doctorBorder.setBottom(doctorSelectDifPatientButton);
+		
+		// ---------- Scene Default ------------ //
+		doctorScene = new Scene(doctorBorder, 600, 700);
+		
+		// ===================================== Doctor Exam ===================================== //
+		
+		// --------- Asset Definition -------- //
+		Label doctorExamLabel = new Label("Examination:");
+		doctorExamLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorExamFindingsLabel = new Label("Physical Test Findings:");
+		doctorExamFindingsLabel.setFont(new Font("Arial", 16));
+		
+		TextField doctorPhysicalField = new TextField();
+		doctorPhysicalField.setPromptText("Enter Physical Findings");
+		
+		Label doctorPrescriptionsLabel = new Label("Prescriptions:");
+		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
+		
+		TextField doctorPrescriptionsField = new TextField();
+		doctorPrescriptionsField.setPromptText("Enter Prescriptions");
+		
+		Button doctorExamSaveButton = new Button("Save and Continue");
+		doctorExamSaveButton.setFont(new Font("Arial", 20));
+		doctorExamSaveButton.setDefaultButton(true);
+		
+		// -------- doctorExamGrid ------- //
+		GridPane doctorExamGrid = new GridPane();
+		doctorExamGrid.add(doctorExamFindingsLabel, 0, 0);
+		doctorExamGrid.add(doctorPhysicalField, 1, 0);
+		doctorExamGrid.add(doctorPrescriptionsLabel, 0, 1);
+		doctorExamGrid.add(doctorPrescriptionsField, 1, 1);
+		
+		// -------- doctorExamVBox ------- //
+		VBox doctorExamVBox = new VBox();
+		doctorExamVBox.getChildren().addAll(doctorExamLabel, doctorExamGrid, doctorExamSaveButton);
+		
+		// -------- doctorBorder Manipulation -------- //
+		doctorBorder.setCenter(doctorExamVBox);
+		
+		// ===================================== Doctor Patient History ===================================== //
+		
+		// --------- Asset Definition -------- //
+		Label doctorPatientHistoryLabel = new Label("Patient History: ");
+		doctorPatientHistoryLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorPriorHealthIssuesLabel = new Label("Prior Health Issues: ");
+		doctorPriorHealthIssuesLabel.setFont(new Font("Arial", 16));
+
+		Label doctorPriorHealthIssuesText = new Label("-");
+		doctorPriorHealthIssuesText.setFont(new Font("Arial", 16));
+		
+		Label doctorPriorMedicationsLabel = new Label("Prior Medications: ");
+		doctorPriorMedicationsLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorPriorMedicationsText = new Label("-");
+		doctorPriorMedicationsText.setFont(new Font("Arial", 16));
+		
+		Label doctorImmRecordsLabel = new Label("Immunization Records: ");
+		doctorImmRecordsLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorImmRecordsText = new Label("-");
+		doctorImmRecordsText.setFont(new Font("Arial", 16));
+		
+		// -------- doctorHistoryVBox ------- //
+		VBox doctorHistoryVBox = new VBox();
+		doctorHistoryVBox.getChildren().addAll(doctorPatientHistoryLabel, doctorPriorHealthIssuesLabel, doctorPriorHealthIssuesText,
+												doctorPriorMedicationsLabel, doctorPriorMedicationsText, doctorImmRecordsLabel, doctorImmRecordsText);
+		
+		// ===================================== Doctor Contact Info ===================================== //
+		
+		// --------- Asset Definition -------- //
+		Label doctorContactInfoLabel = new Label("Button Contact Information: ");
+		doctorContactInfoLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorFullNameLabel = new Label("Full Name: ");
+		doctorFullNameLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorFullNameText = new Label("-");
+		doctorFullNameText.setFont(new Font("Arial", 16));
+		
+		Label doctorEmailLabel = new Label("Email: ");
+		doctorEmailLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorEmailText = new Label("-");
+		doctorEmailText.setFont(new Font("Arial", 16));
+		
+		Label doctorPhoneNumberLabel = new Label("Phone Number: ");
+		doctorPhoneNumberLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorPhoneNumberText = new Label("-");
+		doctorPhoneNumberText.setFont(new Font("Arial", 16));
+		
+		Label doctorPharmacyLabel = new Label("Pharmacy Contact: ");
+		doctorPharmacyLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorPharmacyText = new Label("-");
+		doctorPharmacyText.setFont(new Font("Arial", 16));
+		
+		Label doctorInsuranceLabel = new Label("Insurance Contact: ");
+		doctorInsuranceLabel.setFont(new Font("Arial", 16));
+		
+		Label doctorInsuranceText = new Label("-");
+		doctorInsuranceText.setFont(new Font("Arial", 16));
+		
+		// -------- nurseContactInfoGrid -------- //
+		GridPane doctorContactInfoGrid = new GridPane();
+		doctorContactInfoGrid.add(doctorFullNameLabel, 0, 0);
+		doctorContactInfoGrid.add(doctorFullNameText, 1, 0);
+		doctorContactInfoGrid.add(doctorEmailLabel, 0, 1);
+		doctorContactInfoGrid.add(doctorEmailText, 1, 1);
+		doctorContactInfoGrid.add(doctorPhoneNumberLabel, 0, 2);
+		doctorContactInfoGrid.add(doctorPhoneNumberText, 1, 2);
+		doctorContactInfoGrid.add(doctorPharmacyLabel, 0, 3);
+		doctorContactInfoGrid.add(doctorPharmacyText, 1, 3);
+		doctorContactInfoGrid.add(doctorInsuranceLabel, 0, 4);
+		doctorContactInfoGrid.add(doctorInsuranceText, 1, 4);
+		
+		// -------- doctorContactInfoVBox ------- //
+		VBox doctorContactInfoVBox = new VBox();
+		doctorContactInfoVBox.getChildren().addAll(doctorContactInfoLabel, doctorContactInfoGrid);
+		
+		// ================================== Doctor Visit Summary ================================= //
+		
+		// --------- Asset Definition -------- //
+		Label doctorVisitSummaryLabel = new Label("Visit Summaries:");
+		doctorVisitSummaryLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorVisitSummaryText = new Label("---");
+		doctorVisitSummaryText.setFont(new Font("Arial", 14));
+		
+		TextField doctorVisitSummaryField = new TextField();
+		doctorVisitSummaryField.setPromptText("Eg. 03/24/15: Summary Here");
+		
+		Button doctorVisitSummarySaveButton = new Button("Save");
+		doctorVisitSummarySaveButton.setFont(new Font("Arial", 20));
+		doctorVisitSummarySaveButton.setDefaultButton(true);
+		
+		// -------- patientSummariesVBox ------- //
+		VBox doctorVisitSummaryVBox = new VBox();
+		doctorVisitSummaryVBox.getChildren().addAll(doctorVisitSummaryLabel, doctorVisitSummaryText, doctorVisitSummaryField, doctorVisitSummarySaveButton);
+		
+		// ===================================== Doctor Messages ===================================== //
+		
+		
+		// --------- Asset Definition -------- //
+		Label doctorMessagesLabel = new Label("Messages:");
+		doctorMessagesLabel.setFont(new Font("Arial", 20));
+		
+		Label doctorMessagesText = new Label("Messages to and from patient here");
+		doctorMessagesText.setFont(new Font("Arial", 16));
+		
+		TextField doctorMessageField = new TextField();
+		doctorMessageField.setPromptText("Enter Message");
+		
+		
+		Button doctorSendMessageButton = new Button("Send");
+		doctorSendMessageButton.setFont(new Font("Arial", 20));
+		// Almost the same as patientSendMessageButton
+		doctorSendMessageButton.setDefaultButton(true);
+		doctorSendMessageButton.setOnAction(e -> {
+			currentPatient.messageList.add("Dr. " + currentDoctor.lastName + ": " + doctorMessageField.getText());
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			doctorMessagesText.setText(text);
+			doctorMessageField.clear();
+			
+			// Save patientMessage File
+			database.changeFile(currentPatient.messageFile);
+			String[] temp = new String[currentPatient.messageList.size()]; // convert messages arraylist to array before passing
+			currentPatient.messageList.toArray(temp);
+			try {
+				database.dataWrite(temp);
+			} catch (IOException e1) {
+				System.out.println("Error saving patient messages for doctor");
+			}
+			
+		});
+		
+		VBox doctorMessagesVBox = new VBox();
+		doctorMessagesVBox.getChildren().addAll(doctorMessagesLabel, doctorMessagesText, doctorMessageField, doctorSendMessageButton);
+		
+		
+		// ================================== Doctor Button Functions ================================= //
+		doctorExamButton.setOnAction(e -> {
+			doctorBorder.setCenter(doctorExamVBox);
+		});
+		
+		doctorPatientHistoryButton.setOnAction(e -> {
+			doctorPriorHealthIssuesText.setText(currentPatient.priorHealthIssues);
+			doctorPriorMedicationsText.setText(currentPatient.medications);
+			doctorImmRecordsText.setText(currentPatient.priorImmunizations);
+			doctorBorder.setCenter(doctorHistoryVBox);
+		});
+		
+		doctorContactInfoButton.setOnAction(e -> {
+			doctorFullNameText.setText(currentPatient.firstName + " " + currentPatient.lastName);
+			doctorEmailText.setText(currentPatient.email);
+			doctorPhoneNumberText.setText(currentPatient.phoneNumber);
+			doctorPharmacyText.setText(currentPatient.pharmacyInformation);
+			doctorInsuranceText.setText(currentPatient.insuranceInformation);
+			doctorBorder.setCenter(doctorContactInfoVBox);
+		});
+		
+		doctorMessagesButton.setOnAction(e -> {
+			
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			doctorMessagesText.setText(text);
+			doctorBorder.setCenter(doctorMessagesVBox);
+		});
+		doctorVisitSummaryButton.setOnAction(e -> {
+			doctorBorder.setCenter(doctorVisitSummaryVBox);
+		});
+		doctorExamSaveButton.setOnAction(e -> {
+			doctorBorder.setCenter(doctorHistoryVBox);
+			// SAVE STUFF HERE
+			currentPatient.physicalExamResults = doctorPhysicalField.getText();
+			currentPatient.medications = currentPatient.medications + " " + doctorPrescriptionsField.getText();
+			
+			// Save to file
+			try {
+				database.changeFile(currentPatient.patientID);
+				database.dataWrite(currentPatient.generateStorageArray());
+			} catch (IOException e1) {
+				System.out.println("Error in doctorExamSaveButton");
+			}
+			
+		});
+		doctorVisitSummarySaveButton.setOnAction(e -> {
+			// SAVE STUFF HERE
+			currentPatient.visitSummariesList.add(doctorVisitSummaryField.getText());
+			text = "";
+			for (int i = 0; i < currentPatient.visitSummariesList.size(); i++) {
+				text += currentPatient.visitSummariesList.get(i) + "\n";
+			}
+			doctorVisitSummaryText.setText(text);
+			doctorVisitSummaryField.clear();
+			
+			
+			// Save Visit Summary File
+			database.changeFile(currentPatient.visitSummariesFile);
+			String[] temp = new String[currentPatient.visitSummariesList.size()]; // convert to arraylist to array before passing
+			currentPatient.visitSummariesList.toArray(temp);
+			try {
+				database.dataWrite(temp);
+			} catch (IOException e1) {
+				System.out.println("Error saving visit summaries");
+			}
+		});
+		
+		doctorSelectDifPatientButton.setOnAction(e -> {
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			doctorMessagesText.setText(text);
+			window.setScene(doctorSelectPatientScene);
+		});
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////
 		// --------------------------------- Nurse Page ----------------------------------- //
 		//////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////
@@ -55,16 +389,9 @@ public class GUI extends Application {
 		// ------------ Asset Definition ------------ //
 		ComboBox<String> nursePatientListCombo = new ComboBox<String>();
 		nursePatientListCombo.setPromptText("Select Patient");
-		// for patient in patientList:
-		// doctorPatientListCombo.add(patient.getName());
-		nursePatientListCombo.getItems().addAll("George Person");
 
 		Button nursePatientNextButton = new Button("Next");
 		nursePatientNextButton.setFont(new Font("Arial", 14));
-		nursePatientNextButton.setOnAction(e -> {
-			// currentPatient = patient
-			window.setScene(nurseScene);
-		});
 		
 		Label nurseWelcomeLabel1 = new Label("Hello (name) - Which patient are you seeing today?"); 
 		nurseWelcomeLabel1.setFont(new Font("Arial", 20));
@@ -129,13 +456,13 @@ public class GUI extends Application {
 		Label nurseVitalsLabel = new Label("Enter Vitals:");
 		nurseVitalsLabel.setFont(new Font("Arial", 30));
 		
-		Label nurseWeightLabel = new Label("Weight:");
+		Label nurseWeightLabel = new Label("Weight (lbs):");
 		nurseWeightLabel.setFont(new Font("Arial", 18));
 		
 		TextField nurseWeightField = new TextField();
 		nurseWeightField.setPromptText("Enter Weight");
 		
-		Label nurseHeightLabel = new Label("Height:");
+		Label nurseHeightLabel = new Label("Height (ft'in):");
 		nurseHeightLabel.setFont(new Font("Arial", 18));
 		
 		TextField nurseHeightField = new TextField();
@@ -147,10 +474,6 @@ public class GUI extends Application {
 		TextField nurseBodyTempField = new TextField();
 		nurseBodyTempField.setPromptText("Enter Body Temperature");
 		
-		Label nurseOver12Label = new Label("Patient is over 12?");
-		nurseOver12Label.setFont(new Font("Arial", 18));
-		
-		CheckBox nurseOver12Check = new CheckBox();
 		
 		Label nurseBloodPressureLabel = new Label("Blood Pressure:");
 		nurseBloodPressureLabel.setFont(new Font("Arial", 18));
@@ -160,6 +483,7 @@ public class GUI extends Application {
 		
 		Button nurseVitalsSaveButton = new Button("Save and Continue");
 		nurseVitalsSaveButton.setFont(new Font("Arial", 20));
+		nurseVitalsSaveButton.setDefaultButton(true);
 		
 		
 		// ----------- nurseVitalsGrid ---------- //
@@ -171,10 +495,8 @@ public class GUI extends Application {
 		nurseVitalsGrid.add(nurseHeightField, 1, 1);
 		nurseVitalsGrid.add(nurseBodyTempLabel, 0, 2);
 		nurseVitalsGrid.add(nurseBodyTempField, 1, 2);
-		nurseVitalsGrid.add(nurseOver12Label, 0, 3);
-		nurseVitalsGrid.add(nurseOver12Check, 1, 3);
-		nurseVitalsGrid.add(nurseBloodPressureLabel, 0, 4);
-		nurseVitalsGrid.add(nurseBloodPressureField, 1, 4);
+		nurseVitalsGrid.add(nurseBloodPressureLabel, 0, 3);
+		nurseVitalsGrid.add(nurseBloodPressureField, 1, 3);
 		
 		
 		// ----------- nurseVitalsVBox ---------- //
@@ -207,6 +529,7 @@ public class GUI extends Application {
 		
 		Button nurseConcernsSaveButton = new Button("Save and Continue");
 		nurseConcernsSaveButton.setFont(new Font("Arial", 20));
+		nurseConcernsSaveButton.setDefaultButton(true);
 		
 		// ----------- nurseConcernsGrid ---------- //
 		GridPane nurseConcernsGrid = new GridPane();
@@ -230,44 +553,80 @@ public class GUI extends Application {
 		Label nurseHealthIssuesLabel = new Label("Prior Health Issues:");
 		nurseHealthIssuesLabel.setFont(new Font("Arial", 18));
 		
+		Label nurseHealthIssuesText = new Label("---");
+		nurseHealthIssuesText.setFont(new Font("Arial", 14));
+		
 		Label nurseMedicationsLabel = new Label("Prior Medications:");
 		nurseMedicationsLabel.setFont(new Font("Arial", 18));
 		
+		Label nurseMedicationsText = new Label("---");
+		nurseMedicationsText.setFont(new Font("Arial", 14));
+		
 		Label nurseImmRecordsLabel = new Label("Immunization Records:");
 		nurseImmRecordsLabel.setFont(new Font("Arial", 18));
+		
+		Label nurseImmRecordsText = new Label("---");
+		nurseImmRecordsText.setFont(new Font("Arial", 14));
 		
 		
 		// ----------- nurseHistoryVBox ---------- //
 		VBox nurseHistoryVBox = new VBox();
 		nurseHistoryVBox.setPadding(new Insets(40, 40, 40, 40));
-		nurseHistoryVBox.getChildren().addAll(nurseHistoryLabel, nurseHealthIssuesLabel, nurseMedicationsLabel,
-												nurseImmRecordsLabel);
+		nurseHistoryVBox.getChildren().addAll(nurseHistoryLabel, nurseHealthIssuesLabel, nurseHealthIssuesText, nurseMedicationsLabel,
+				nurseMedicationsText, nurseImmRecordsLabel, nurseImmRecordsText);
 		
 		// ===================================== Nurse Contact Info ===================================== //
 		
 		// --------- Asset Definition -------- //
-		Label nurseContactInfoLabel = new Label("Contact Information:");
+		Label nurseContactInfoLabel = new Label("Patient Contact Information: ");
 		nurseContactInfoLabel.setFont(new Font("Arial", 20));
 		
-		Label nurseFullNameLabel = new Label("Full Name:");
+		Label nurseFullNameLabel = new Label("Full Name: ");
 		nurseFullNameLabel.setFont(new Font("Arial", 16));
 		
-		Label nurseEmail = new Label("Email:");
-		nurseEmail.setFont(new Font("Arial", 16));
+		Label nurseFullNameText = new Label("-");
+		nurseFullNameText.setFont(new Font("Arial", 16));
 		
-		Label nursePhoneNumber = new Label("Phone Number:");
-		nursePhoneNumber.setFont(new Font("Arial", 16));
+		Label nurseEmailLabel = new Label("Email: ");
+		nurseEmailLabel.setFont(new Font("Arial", 16));
 		
-		Label nursePharmacyContactLabel = new Label("Pharmacy Contact:");
-		nursePharmacyContactLabel.setFont(new Font("Arial", 16));
+		Label nurseEmailText = new Label("-");
+		nurseEmailText.setFont(new Font("Arial", 16));
 		
-		Label nurseInsuranceContactLabel = new Label("Insurance Contact");
-		nurseInsuranceContactLabel.setFont(new Font("Arial", 16));
+		Label nursePhoneNumberLabel = new Label("Phone Number: ");
+		nursePhoneNumberLabel.setFont(new Font("Arial", 16));
 		
-		// -------- doctorContactInfoVBox ------- //
+		Label nursePhoneNumberText = new Label("-");
+		nursePhoneNumberText.setFont(new Font("Arial", 16));
+		
+		Label nursePharmacyLabel = new Label("Pharmacy Address: ");
+		nursePharmacyLabel.setFont(new Font("Arial", 16));
+		
+		Label nursePharmacyText = new Label("-");
+		nursePharmacyText.setFont(new Font("Arial", 16));
+		
+		Label nurseInsuranceLabel = new Label("Insurance Contact: ");
+		nurseInsuranceLabel.setFont(new Font("Arial", 16));
+		
+		Label nurseInsuranceText = new Label("-");
+		nurseInsuranceText.setFont(new Font("Arial", 16));
+		
+		// -------- nurseContactInfoGrid -------- //
+		GridPane nurseContactInfoGrid = new GridPane();
+		nurseContactInfoGrid.add(nurseFullNameLabel, 0, 0);
+		nurseContactInfoGrid.add(nurseFullNameText, 1, 0);
+		nurseContactInfoGrid.add(nurseEmailLabel, 0, 1);
+		nurseContactInfoGrid.add(nurseEmailText, 1, 1);
+		nurseContactInfoGrid.add(nursePhoneNumberLabel, 0, 2);
+		nurseContactInfoGrid.add(nursePhoneNumberText, 1, 2);
+		nurseContactInfoGrid.add(nursePharmacyLabel, 0, 3);
+		nurseContactInfoGrid.add(nursePharmacyText, 1, 3);
+		nurseContactInfoGrid.add(nurseInsuranceLabel, 0, 4);
+		nurseContactInfoGrid.add(nurseInsuranceText, 1, 4);
+		
+		// -------- nurseContactInfoVBox -------- //
 		VBox nurseContactInfoVBox = new VBox();
-		nurseContactInfoVBox.getChildren().addAll(nurseContactInfoLabel, nurseFullNameLabel, nurseEmail,
-													nursePhoneNumber, nursePharmacyContactLabel, nurseInsuranceContactLabel);
+		nurseContactInfoVBox.getChildren().addAll(nurseContactInfoLabel, nurseContactInfoGrid);
 		
 		// ===================================== Nurse Messages ===================================== //
 		
@@ -275,7 +634,7 @@ public class GUI extends Application {
 		Label nurseMessagesLabel = new Label("Messages:");
 		nurseMessagesLabel.setFont(new Font("Arial", 20));
 		
-		Label nurseMessagesText = new Label("Messages to and from patient here");
+		Label nurseMessagesText = new Label("No Messages");
 		nurseMessagesText.setFont(new Font("Arial", 16));
 		
 		TextField nurseMessageField = new TextField();
@@ -283,10 +642,27 @@ public class GUI extends Application {
 		
 		Button nurseSendMessageButton = new Button("Send");
 		nurseSendMessageButton.setFont(new Font("Arial", 20));
+		// Almost the same as patientSendMessageButton
+		nurseSendMessageButton.setDefaultButton(true);
 		nurseSendMessageButton.setOnAction(e -> {
-			// Add to messages List
+			currentPatient.messageList.add("Nurse " + currentNurse.lastName + ": " + nurseMessageField.getText());
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			nurseMessagesText.setText(text);
 			nurseMessageField.clear();
-			// MAKE SURE TO REFRESH MESSAGES LABEL
+			
+			// Save patientMessage File
+			database.changeFile(currentPatient.messageFile);
+			String[] temp = new String[currentPatient.messageList.size()]; // convert messages arraylist to array before passing
+			currentPatient.messageList.toArray(temp);
+			try {
+				database.dataWrite(temp);
+			} catch (IOException e1) {
+				System.out.println("Error saving patient messages for nurse");
+			}
+			
 		});
 		
 		VBox nurseMessagesVBox = new VBox();
@@ -296,34 +672,74 @@ public class GUI extends Application {
 		nurseVitalsButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseVitalsVBox);
 		});
+		
 		nurseHealthConcernsButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseConcernsVBox);
 		});
+		
 		nursePatientHistoryButton.setOnAction(e -> {
+			nurseHealthIssuesText.setText(currentPatient.priorHealthIssues);
+			nurseMedicationsText.setText(currentPatient.medications);
+			nurseImmRecordsText.setText(currentPatient.priorImmunizations);
 			nurseBorder.setCenter(nurseHistoryVBox);
 		});
+		
 		nurseContactInfoButton.setOnAction(e -> {
+			nurseFullNameText.setText(currentPatient.firstName + " " + currentPatient.lastName);
+			nurseEmailText.setText(currentPatient.email);
+			nursePhoneNumberText.setText(currentPatient.phoneNumber);
+			nursePharmacyText.setText(currentPatient.pharmacyInformation);
+			nurseInsuranceText.setText(currentPatient.insuranceInformation);
 			nurseBorder.setCenter(nurseContactInfoVBox);
 		});
+		
 		nurseMessagesButton.setOnAction(e -> {
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			nurseMessagesText.setText(text);
 			nurseBorder.setCenter(nurseMessagesVBox);
 		});
+		
 		nurseVitalsSaveButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseConcernsVBox);
-			// SAVE STUFFF
-			nurseWeightField.setPromptText(nurseWeightField.getText());
-			nurseHeightField.setPromptText(nurseHeightField.getText());
-			nurseBodyTempField.setPromptText(nurseBodyTempField.getText());
-			nurseBloodPressureField.setPromptText(nurseBloodPressureField.getText());
+			// SAVE STUFF
+			currentPatient.currentWeight = nurseWeightField.getText();
+			currentPatient.currentHeight = nurseHeightField.getText();
+			currentPatient.currentTemperature = nurseBodyTempField.getText();
+			currentPatient.bloodPressure = nurseBloodPressureField.getText();
+			
+			// Save to file
+			try {
+				database.changeFile(currentPatient.patientID);
+				database.dataWrite(currentPatient.generateStorageArray());
+			} catch (IOException e1) {
+				System.out.println("Error in nurseVitalsSaveButton");
+			}
+			
 		});
 		nurseConcernsSaveButton.setOnAction(e -> {
 			nurseBorder.setCenter(nurseHistoryVBox);
 			// SAVE STUFF
-			nurseAllergiesField.setPromptText(nurseAllergiesField.getText());
-			nurseKnownConcernsField.setPromptText(nurseKnownConcernsField.getText());
+			currentPatient.currentAllergies = nurseAllergiesField.getText();
+			currentPatient.currentHealthConcerns = nurseKnownConcernsField.getText();
+			
+			// Save to file
+			try {
+				database.changeFile(currentPatient.patientID);
+				database.dataWrite(currentPatient.generateStorageArray());
+			} catch (IOException e1) {
+				System.out.println("Error in nurseConcernsSaveButton");
+			}
 		});
 		
 		nurseSelectDifPatientButton.setOnAction(e -> {
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			nurseMessagesText.setText(text);
 			window.setScene(nurseSelectPatientScene);
 		});
 		
@@ -397,6 +813,7 @@ public class GUI extends Application {
 		
 		Button patientContactInfoSaveButton = new Button("Save and Continue");
 		patientContactInfoSaveButton.setFont(new Font("Arial", 20));
+		patientContactInfoSaveButton.setDefaultButton(true);
 		
 		// -------- patientContactInfoGrid ------- //
 		GridPane patientContactInfoGrid = new GridPane();
@@ -424,12 +841,12 @@ public class GUI extends Application {
 		Label patientVisitSummariesTitleLabel = new Label("Visit Summaries:");
 		patientVisitSummariesTitleLabel.setFont(new Font("Arial", 20));
 		
-		Label patientVisitSummariesLabel = new Label("Load Visit Summaries Here");
-		patientVisitSummariesLabel.setFont(new Font("Arial", 16));
+		Label patientVisitSummariesText = new Label("---");
+		patientVisitSummariesText.setFont(new Font("Arial", 14));
 		
 		// -------- patientSummariesVBox ------- //
 		VBox patientVisitSummariesVBox = new VBox();
-		patientVisitSummariesVBox.getChildren().addAll(patientVisitSummariesTitleLabel, patientVisitSummariesLabel);
+		patientVisitSummariesVBox.getChildren().addAll(patientVisitSummariesTitleLabel, patientVisitSummariesText);
 		
 		// ===================================== Patient Messages ===================================== //
 		
@@ -437,7 +854,7 @@ public class GUI extends Application {
 		Label patientMessagesLabel = new Label("Messages:");
 		patientMessagesLabel.setFont(new Font("Arial", 20));
 		
-		Label patientMessagesText = new Label("Messages to and from doctors/Nurses here");
+		Label patientMessagesText = new Label("No Messages");
 		patientMessagesText.setFont(new Font("Arial", 16));
 		
 		TextField patientMessageField = new TextField();
@@ -445,10 +862,26 @@ public class GUI extends Application {
 		
 		Button patientSendMessageButton = new Button("Send");
 		patientSendMessageButton.setFont(new Font("Arial", 20));
+		patientSendMessageButton.setDefaultButton(true);
 		patientSendMessageButton.setOnAction(e -> {
-			// Add to messages List
+			currentPatient.messageList.add(currentPatient.firstName + " " + currentPatient.lastName + ": " + patientMessageField.getText());
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			patientMessagesText.setText(text);
 			patientMessageField.clear();
-			// MAKE SURE TO REFRESH MESSAGES LABEL
+			
+			// Save patientMessage File
+			database.changeFile(currentPatient.messageFile);
+			String[] temp = new String[currentPatient.messageList.size()]; // convert messages arraylist to array before passing
+			currentPatient.messageList.toArray(temp);
+			try {
+				database.dataWrite(temp);
+			} catch (IOException e1) {
+				System.out.println("Error saving patient messages");
+			}
+			
 		});
 		
 		VBox patientMessagesVBox = new VBox();
@@ -459,9 +892,20 @@ public class GUI extends Application {
 			patientBorder.setCenter(patientContactInfoVBox);
 		});
 		patientVisitSummariesButton.setOnAction(e -> {
+			// Load visit summaries into label
+			text = "";
+			for (int i = 0; i < currentPatient.visitSummariesList.size(); i++) {
+				text += currentPatient.visitSummariesList.get(i) + "\n";
+			}
+			patientVisitSummariesText.setText(text);
 			patientBorder.setCenter(patientVisitSummariesVBox);
 		});
 		patientMessagesButton.setOnAction(e -> {
+			text = "";
+			for (int i = 0; i < currentPatient.messageList.size(); i++) {
+				text += currentPatient.messageList.get(i) + "\n";
+			}
+			patientMessagesText.setText(text);
 			patientBorder.setCenter(patientMessagesVBox);
 		});
 		patientContactInfoSaveButton.setOnAction(e -> {
@@ -471,7 +915,13 @@ public class GUI extends Application {
 			patientEmailField.setText(patientEmailField.getText());
 			patientPhoneNumberField.setText(patientPhoneNumberField.getText());
 			patientInsuranceField.setText(patientInsuranceField.getText());
-			
+			// Save to file
+			try {
+				database.changeFile(currentPatient.patientID);
+				database.dataWrite(currentPatient.generateStorageArray());
+			} catch (IOException e1) {
+				System.out.println("Error in patientContactInfoSaveButton");
+			}
 		});
 		
 		
@@ -514,11 +964,12 @@ public class GUI extends Application {
 			database.changeFile(loginUsernameField.getText());
 			try {
 				if (database.checkPassword(loginPasswordField.getText())) {
-					if (database.getCurrentFileName().substring(0,1).equals("P")) {
+					if (database.getCurrentFileName().substring(0,1).equals("P")) { // ---------- Patient LOGIN
 						String[] data = database.getCurrentData();
 						try {
 							// Create patient and load data into it
-							currentPatient = new Patient(data[2], data[3], data[4], data[6], data[18], data[0], Integer.parseInt(data[5]), data[8], data[7], data[1]);
+							currentPatient = new Patient(data[2], data[3], data[4], data[6], data[18], data[0], Integer.parseInt(data[5]), data[8], data[7], data[1],
+									data[19], data[21], data[9], data[10], data[11]);
 							// Update text on Patient page contact info
 							patientNameLabel.setText(currentPatient.firstName + " " + currentPatient.lastName);
 							patientFullNameField.setText(currentPatient.firstName + " " + currentPatient.lastName);
@@ -527,23 +978,58 @@ public class GUI extends Application {
 							patientPharmacyField.setText(currentPatient.pharmacyInformation);
 							patientInsuranceField.setText(currentPatient.insuranceInformation);
 							
+							// Load patient messages and visitSummaries
+							try {
+								database.changeFile(currentPatient.messageFile);
+								data = database.getCurrentData();
+								for(int i = 0; i < data.length; i++) {
+									currentPatient.messageList.add(data[i]);
+								}
+								
+								database.changeFile(currentPatient.visitSummariesFile);
+								data = database.getCurrentData();
+								for(int i = 0; i < data.length; i++) {
+									currentPatient.visitSummariesList.add(data[i]);
+								}
+							} catch (FileNotFoundException e1) {
+								System.out.println("Error loading patient messages");
+							}
+							
 						} catch (NumberFormatException | IOException e1) {
 							System.out.println("Error loading in patient information in GUI");
 						}
 						window.setScene(patientScene);
 						
-					} else if (database.getCurrentFileName().substring(0,1).equals("D")) {
+						
+					} else if (database.getCurrentFileName().substring(0,1).equals("D")) { // -------- DOCTOR LOGIN
+						String[] data = database.getCurrentData();
+						// Create doctor and load data into it
+						currentDoctor = new Doctor(data[0], data[1], data[2], data[3], data[4]);
+						// Update doctor page text
+						doctorWelcomeLabel1.setText("Hello, " + currentDoctor.lastName);
+						doctorWelcomeLabel2.setText("Which patient are you seeing today?");
+						// Extract the currentDoctor's patients and put them into its ArrayList
+						database.changeFile(currentDoctor.patientFile);
+						data = database.getCurrentData();
+						for (int i = 0; i < data.length; i++) {
+							doctorPatientListCombo.getItems().add(data[i]);
+						}
+						
 						window.setScene(doctorSelectPatientScene);
 						
-					} else if (database.getCurrentFileName().substring(0,1).equals("N")) {
+					} else if (database.getCurrentFileName().substring(0,1).equals("N")) { // ---------- NURSE LOGIN
 						String[] data = database.getCurrentData();
 						// Create nurse and load data into it
 						currentNurse = new Nurse(data[0], data[1], data[2], data[3], data[4], data[5]);
-						System.out.println(currentNurse.assignedDoctorEmpID);
 						// Update nurse page text
 						nurseWelcomeLabel1.setText("Hello, " + currentNurse.firstName + " " + currentNurse.lastName);
 						nurseWelcomeLabel2.setText("Which patient are you seeing today?");
-						
+						// Extract the currentNurse's patients and put them into its ArrayList
+						database.changeFile(currentNurse.patientFile);
+						data = database.getCurrentData();
+						for (int i = 0; i < data.length; i++) {
+							nursePatientListCombo.getItems().add(data[i]);
+						}
 						
 						window.setScene(nurseSelectPatientScene);
 					}
@@ -552,7 +1038,7 @@ public class GUI extends Application {
 					loginWrongInfoLabel.setText("Incorrect Username or Password.");
 				}
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				System.out.println("Error in login section - Check if user has patients file");
 				loginWrongInfoLabel.setText("Incorrect Username or Password.");
 			}
 			
@@ -685,13 +1171,25 @@ public class GUI extends Application {
 			try {
 				newPatient = new Patient(CAFirstNameField.getText(), CALastNameField.getText(), CADateOfBirthField.getText(), 
 							CAPhoneNumField.getText(), CAEmailField.getText(), "P" + CAFirstNameField.getText().substring(0, 1) + CALastNameField.getText() + CADateOfBirthField.getText().substring(6),
-							2021 - Integer.parseInt(CADateOfBirthField.getText().substring(6)), CAPharmacyField.getText(), CAInsuranceField.getText(),CAPasswordField.getText());
+							2021 - Integer.parseInt(CADateOfBirthField.getText().substring(6)), CAPharmacyField.getText(), CAInsuranceField.getText(),CAPasswordField.getText(),
+							"P" + CAFirstNameField.getText().substring(0, 1) + CALastNameField.getText() + CADateOfBirthField.getText().substring(6) + "Messages",
+							CADateOfBirthField.getText().substring(6) + "VisitSummaries", "null", "null", "null");
 			} catch (NumberFormatException | IOException e2) {
 				e2.printStackTrace();
 			}
 				try {
+					// create and save patient and patientmessages file
 					database.changeFile(newPatient.patientID);
 					database.dataWrite(newPatient.generateStorageArray());
+					database.changeFile(newPatient.messageFile);
+					String[] temp = new String[newPatient.messageList.size()]; // convert messages arraylist to array before passing
+					newPatient.messageList.toArray(temp);
+					database.dataWrite(temp);
+					// create and save patient visit summaries
+					database.changeFile(newPatient.visitSummariesFile);
+					temp = new String[newPatient.visitSummariesList.size()]; // convert visitSummaries arraylist to array before passing
+					newPatient.visitSummariesList.toArray(temp);
+					database.dataWrite(temp);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -753,237 +1251,7 @@ public class GUI extends Application {
 				
 			
 				
-		
-		
-		
-
-		
-		//////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////////////////////////
-		// --------------------------------- Doctor Page ---------------------------------- //
-		//////////////////////////////////////////////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////////////////////////
-		
-		// ===================================== Doctor Select Patient ===================================== //
-		// ------------ Asset Definition ------------ //
-		ComboBox<String> doctorPatientListCombo = new ComboBox<String>();
-		doctorPatientListCombo.setPromptText("Select Patient");
-		// for patient in patientList:
-		// doctorPatientListCombo.add(patient.getName());
-		doctorPatientListCombo.getItems().addAll("George Person");
-
-		Button doctorPatientNextButton = new Button("Next");
-		doctorPatientNextButton.setFont(new Font("Arial", 14));
-		doctorPatientNextButton.setOnAction(e -> {
-			// currentPatient = patient
-			window.setScene(doctorScene);
-		});
-		
-		Label doctorWelcomeLabel = new Label("Hello Dr. (name) - Which patient are you seeing today?"); 
-		doctorWelcomeLabel.setFont(new Font("Arial", 20));
-		
-		// ----------- doctorSelectPatientGrid ---------- //
-		VBox doctorSelectPatientVBox = new VBox();
-		doctorSelectPatientVBox.setPadding(new Insets(40, 40, 40, 40));
-		doctorSelectPatientVBox.getChildren().addAll(doctorWelcomeLabel, doctorPatientListCombo, doctorPatientNextButton);
-		
-		// ---------- Scene Default ---------- //
-		doctorSelectPatientScene = new Scene(doctorSelectPatientVBox, 600, 700);
-		
-		// ================================= General doctorScene ================================= //
-		
-		// ---------- Assets ------- //
-		Label doctorPatientNameLabel = new Label("            Patient Name");
-		doctorPatientNameLabel.setFont(new Font("Arial", 20));
-		
-		Button doctorExamButton = new Button("Examination");
-		doctorExamButton.setFont(new Font("Arial", 16));
-		
-		Button doctorHistoryButton = new Button("History");
-		doctorHistoryButton.setFont(new Font("Arial", 16));
-		
-		Button doctorContactInfoButton = new Button("Contact Information");
-		doctorContactInfoButton.setFont(new Font("Arial", 16));
-		
-		Button doctorVisitSummaryButton = new Button("Visit Summary");
-		doctorVisitSummaryButton.setFont(new Font("Arial", 16));
-		
-		Button doctorMessagesButton = new Button("Messages");
-		doctorMessagesButton.setFont(new Font("Arial", 16));
-		
-		Button doctorSelectDifPatientButton = new Button("Select A Different Patient");
-		doctorSelectDifPatientButton.setFont(new Font("Arial", 20));
-		
-		// BUTTON FUNCTION AT BOTTOM OF DOCTOR PAGE //
-		
-		// ------------ doctorMenuVBox ----------- //
-		VBox doctorMenuVBox = new VBox();
-		doctorMenuVBox.setPadding(new Insets(10, 10, 10, 10));
-		doctorMenuVBox.getChildren().addAll(doctorExamButton, doctorHistoryButton, doctorContactInfoButton,
-											doctorVisitSummaryButton, doctorMessagesButton);
-		
-		// ----------- doctorBorder ---------- //
-		BorderPane doctorBorder = new BorderPane();
-		doctorBorder.setPadding(new Insets(10, 10, 10, 10));
-		doctorBorder.setTop(doctorPatientNameLabel);
-		doctorBorder.setLeft(doctorMenuVBox);
-		doctorBorder.setBottom(doctorSelectDifPatientButton);
-		
-		// ---------- Scene Default ------------ //
-		doctorScene = new Scene(doctorBorder, 600, 700);
-		
-		// ===================================== Doctor Exam ===================================== //
-		
-		// --------- Asset Definition -------- //
-		Label doctorExamLabel = new Label("Examination:");
-		doctorExamLabel.setFont(new Font("Arial", 20));
-		
-		Label doctorExamFindingsLabel = new Label("Physical Test Findings:");
-		doctorExamFindingsLabel.setFont(new Font("Arial", 16));
-		
-		TextField doctorPhysicalField = new TextField();
-		doctorPhysicalField.setPromptText("Enter Physical Findings");
-		
-		Label doctorPrescriptionsLabel = new Label("Prescriptions:");
-		doctorPrescriptionsLabel.setFont(new Font("Arial", 16));
-		
-		TextField doctorPrescriptionsField = new TextField();
-		doctorPrescriptionsField.setPromptText("Enter Prescriptions");
-		
-		Button doctorExamSaveButton = new Button("Save and Continue");
-		doctorExamSaveButton.setFont(new Font("Arial", 20));
-		
-		// -------- doctorExamGrid ------- //
-		GridPane doctorExamGrid = new GridPane();
-		doctorExamGrid.add(doctorExamFindingsLabel, 0, 0);
-		doctorExamGrid.add(doctorPhysicalField, 1, 0);
-		doctorExamGrid.add(doctorPrescriptionsLabel, 0, 1);
-		doctorExamGrid.add(doctorPrescriptionsField, 1, 1);
-		
-		// -------- doctorExamVBox ------- //
-		VBox doctorExamVBox = new VBox();
-		doctorExamVBox.getChildren().addAll(doctorExamLabel, doctorExamGrid, doctorExamSaveButton);
-		
-		// -------- doctorBorder Manipulation -------- //
-		doctorBorder.setCenter(doctorExamVBox);
-		
-		// ===================================== Doctor History ===================================== //
-		
-		// --------- Asset Definition -------- //
-		Label doctorPatientHistoryLabel = new Label("Patient History:");
-		doctorPatientHistoryLabel.setFont(new Font("Arial", 20));
-		
-		Label doctorPriorHealthIssuesLabel = new Label("Prior Health Issues:");
-		doctorPriorHealthIssuesLabel.setFont(new Font("Arial", 16));
-		
-		Label doctorPriorMedicationsLabel = new Label("Prior Medications:");
-		doctorPriorMedicationsLabel.setFont(new Font("Arial", 16));
-		
-		Label doctorImmRecordsLabel = new Label("Immunization Records:");
-		doctorImmRecordsLabel.setFont(new Font("Arial", 16));
-		
-		// -------- doctorHistoryVBox ------- //
-		VBox doctorHistoryVBox = new VBox();
-		doctorHistoryVBox.getChildren().addAll(doctorPatientHistoryLabel, doctorPriorHealthIssuesLabel,
-												doctorPriorMedicationsLabel, doctorImmRecordsLabel);
-		
-		// ===================================== Doctor Contact Info ===================================== //
-		
-		// --------- Asset Definition -------- //
-		Label doctorContactInfoLabel = new Label("Contact Information:");
-		doctorContactInfoLabel.setFont(new Font("Arial", 20));
-		
-		Label doctorFullNameLabel = new Label("Full Name:");
-		doctorFullNameLabel.setFont(new Font("Arial", 16));
-		
-		Label doctorEmail = new Label("Email:");
-		doctorEmail.setFont(new Font("Arial", 16));
-		
-		Label doctorPhoneNumber = new Label("Phone Number:");
-		doctorPhoneNumber.setFont(new Font("Arial", 16));
-		
-		Label doctorPharmacyContactLabel = new Label("Pharmacy Contact:");
-		doctorPharmacyContactLabel.setFont(new Font("Arial", 16));
-		
-		Label doctorInsuranceContactLabel = new Label("Insurance Contact");
-		doctorInsuranceContactLabel.setFont(new Font("Arial", 16));
-		
-		// -------- doctorContactInfoVBox ------- //
-		VBox doctorContactInfoVBox = new VBox();
-		doctorContactInfoVBox.getChildren().addAll(doctorContactInfoLabel, doctorFullNameLabel, doctorEmail,
-													doctorPhoneNumber, doctorPharmacyContactLabel, doctorInsuranceContactLabel);
-		
-		// ================================== Doctor Visit Summary ================================= //
-		
-		// --------- Asset Definition -------- //
-		Label doctorVisitSummaryLabel = new Label("Visit Summary:");
-		doctorVisitSummaryLabel.setFont(new Font("Arial", 20));
-		
-		TextField doctorVisitSummaryField = new TextField();
-		doctorVisitSummaryField.setPromptText("Enter Summary for this Visit");
-		
-		Button doctorVisitSummarySaveButton = new Button("Save and Continue");
-		doctorVisitSummarySaveButton.setFont(new Font("Arial", 20));
-		
-		// -------- patientSummariesVBox ------- //
-		VBox doctorVisitSummaryVBox = new VBox();
-		doctorVisitSummaryVBox.getChildren().addAll(doctorVisitSummaryLabel, doctorVisitSummaryField, doctorVisitSummarySaveButton);
-		
-		// ===================================== Doctor Messages ===================================== //
-		
-		
-		// --------- Asset Definition -------- //
-		Label doctorMessagesLabel = new Label("Messages:");
-		doctorMessagesLabel.setFont(new Font("Arial", 20));
-		
-		Label doctorMessagesText = new Label("Messages to and from patient here");
-		doctorMessagesText.setFont(new Font("Arial", 16));
-		
-		TextField doctorMessageField = new TextField();
-		doctorMessageField.setPromptText("Enter Message");
-		
-		Button doctorSendMessageButton = new Button("Send");
-		doctorSendMessageButton.setFont(new Font("Arial", 20));
-		doctorSendMessageButton.setOnAction(e -> {
-			// Add to messages List
-			doctorMessageField.clear();
-			// MAKE SURE TO REFRESH MESSAGES LABEL
-		});
-		
-		VBox doctorMessagesVBox = new VBox();
-		doctorMessagesVBox.getChildren().addAll(doctorMessagesLabel, doctorMessagesText, doctorMessageField, doctorSendMessageButton);
-		
-		
-		// ================================== Doctor Button Functions ================================= //
-		doctorExamButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorExamVBox);
-		});
-		doctorHistoryButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorHistoryVBox);
-		});
-		doctorContactInfoButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorContactInfoVBox);
-		});
-		doctorMessagesButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorMessagesVBox);
-		});
-		doctorVisitSummaryButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorVisitSummaryVBox);
-		});
-		doctorExamSaveButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorHistoryVBox);
-			// SAVE STUFF HERE
-			doctorPhysicalField.setText(doctorPhysicalField.getText());
-			doctorPrescriptionsField.setText(doctorPrescriptionsField.getText());
-		});
-		doctorVisitSummarySaveButton.setOnAction(e -> {
-			doctorBorder.setCenter(doctorMessagesVBox);
-			// SAVE STUFF HERE
-			doctorVisitSummaryField.setText(doctorVisitSummaryField.getText());
-		});
-		doctorSelectDifPatientButton.setOnAction(e -> {
-			window.setScene(doctorSelectPatientScene);
-		});
+		// --------------------- SPECIAL BUTTON FUNCTIONS --------------------- //
 		
 
 		// Save button information at the bottom so that all objects have been instantiated
@@ -992,14 +1260,94 @@ public class GUI extends Application {
 			currentPatient.phoneNumber = patientPhoneNumberField.getText();
 			currentPatient.pharmacyInformation = patientPharmacyField.getText();
 			currentPatient.insuranceInformation = patientInsuranceField.getText();
-			database.changeFile(currentPatient.patientID);
+			// Save info
 			try {
+				database.changeFile(currentPatient.patientID);
 				database.dataWrite(currentPatient.generateStorageArray());
 			} catch (IOException e1) {
 				System.out.println("Error in datawrite Patient");
 			}
 			patientBorder.setCenter(patientVisitSummariesVBox);
 			
+		});
+		
+		// Nurse patient next button for selecting current patient
+		nursePatientNextButton.setOnAction(e -> {
+			if (nursePatientListCombo.getValue() != null) {
+				database.changeFile(nursePatientListCombo.getValue());
+			}
+			String[] data;
+			try {
+				data = database.getCurrentData();
+				try {
+					currentPatient = new Patient(data[2], data[3], data[4], data[6], data[18], data[0], Integer.parseInt(data[5]), data[8], data[7], data[1],
+							data[19], data[21], data[9], data[10], data[11]);
+				} catch (NumberFormatException | IOException e1) {
+					System.out.println("Error loading into currentPatient in nursePatientNextButton");
+				}
+				// Load patient's messages for nurse
+				database.changeFile(currentPatient.messageFile);
+				try {
+					data = database.getCurrentData();
+					for(int i = 0; i < data.length; i++) {
+						currentPatient.messageList.add(data[i]);
+					}
+				} catch (FileNotFoundException e1) {
+					System.out.println("Error loading patient messages for nurse");
+				}
+			} catch (FileNotFoundException e2) {
+				System.out.println("Error loading patient data in nursePatientNextButton");
+			}
+			
+			// Change labels for patient info
+			nursePatientNameLabel.setText("Nurse " + currentNurse.lastName + ": " + " Seeing " + currentPatient.firstName + " " + currentPatient.lastName);		
+			
+			
+			window.setScene(nurseScene);
+		});
+		
+		// Doctor patient next button for selecting current patient
+		doctorPatientNextButton.setOnAction(e -> {
+			if (doctorPatientListCombo.getValue() != null) {
+				database.changeFile(doctorPatientListCombo.getValue());
+			}
+			String[] data;
+			try {
+				data = database.getCurrentData();
+				try {
+					currentPatient = new Patient(data[2], data[3], data[4], data[6], data[18], data[0], Integer.parseInt(data[5]), data[8], data[7], data[1],
+							data[19], data[21], data[9], data[10], data[11]);
+				} catch (NumberFormatException | IOException e1) {
+					System.out.println("Error loading into currentPatient in doctorPatientNextButton");
+				}
+				// Load patient's messages for nurse
+				database.changeFile(currentPatient.messageFile);
+				data = database.getCurrentData();
+				for(int i = 0; i < data.length; i++) {
+					currentPatient.messageList.add(data[i]);
+				}
+				// Load patients visitSummaries for doctor
+				database.changeFile(currentPatient.visitSummariesFile);
+				data = database.getCurrentData();
+				for(int i = 0; i < data.length; i++) {
+					currentPatient.visitSummariesList.add(data[i]);
+				}
+			} catch (FileNotFoundException e2) {
+				System.out.println("Error loading patient data in doctorPatientNextButton");
+			}
+			
+			// Change labels for patient info
+			doctorPatientNameLabel.setText("Doctor " + currentDoctor.lastName + ": " + " Seeing " + currentPatient.firstName + " " + currentPatient.lastName);
+			
+			// Visit Summaries
+			text = "";
+			for (int i = 0; i < currentPatient.visitSummariesList.size(); i++) {
+				text += currentPatient.visitSummariesList.get(i) + "\n";
+			}
+			doctorVisitSummaryText.setText(text);
+			
+			
+			window.setScene(doctorScene);
 		});
 		
 		//////////////////////////////////////////////////////////////////////////////////////
