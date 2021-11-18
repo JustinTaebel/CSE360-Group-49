@@ -1,0 +1,14 @@
+Patients vitals were normal. Patient came in for treatment of a
+cut from rusted metal. Doctor will monitor for infection and has
+prescribed anitbiotics. Patient has been vaccinated for tetnus so
+breakthrough infection is unlikely.
+
+Patients vitals were abnormally low and is running a fever.
+Patients body has responded to the infection and is now
+fighting it. More anitbiotics were prescribed to help
+fight infection.
+
+Patients vitals were normal. Patient seems to have
+recovered from infection. Doctor will continue to monitor 
+and has told the patient to finish the prescribed antibiotics
+to prevent infection from resurfacing.

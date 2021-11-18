@@ -1,0 +1,9 @@
+Vitals were taken and were normal. Medical history
+was recorded.
+
+Vitals were taken and were normal. Patient recieved
+their COVID-19 shot.
+
+Vitals taken and were normal. Patient had irratation
+around the eyes and had blurred vision. Sending patient
+to ophthalmologist for more testing.
