@@ -1,10 +1,12 @@
 package team49;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 
@@ -20,8 +22,7 @@ public class Database {
 	
 	/*
 	 * Database should be instantiated at the same time as a the object it is associated with
-	 * Doctor, Nurse, and Patient classes are still under development
-	 * Author: Zachary Heidemann
+	 * Author: Zachary Heidemann, Brent Julius
 	 */
 	
 	public Database() {
@@ -31,13 +32,13 @@ public class Database {
 	// constructor creates text file if one doesn't already exist
 	public Database(String patientID) throws IOException {
 		fileName = patientID;
-		file = new File("src/application/Database/" + fileName + ".txt");
+		file = new File("src/team49/Database/" + fileName + ".txt");
 	}
 	
 	
 	// counts the number of lines in the text file, and returns and integer
 	private int countLines() throws FileNotFoundException {
-		inFile = new Scanner(new FileReader("src/application/Database/" + fileName + ".txt"));
+		inFile = new Scanner(new FileReader("src/team49/Database/" + fileName + ".txt"));
 		int count = 0;
 		while(inFile.hasNextLine()) {
 			inFile.nextLine();
@@ -50,7 +51,7 @@ public class Database {
 	// takes an array as input, and writes its members to the text file
 	public void dataWrite(String[] arr) throws IOException {
 		clearFile();
-		outFile = new FileWriter("src/application/Database/" + fileName + ".txt");
+		outFile = new FileWriter("src/team49/Database/" + fileName + ".txt");
 		int fileLength = countLines();
 		for(int ii = 0; ii < arr.length; ii++) {
 			outFile.write(arr[ii] + "\n");
@@ -58,10 +59,22 @@ public class Database {
 		outFile.close();
 	}
 	
+	// For assigning patients nurses and doctors
+	public void addLine(String input) throws IOException {
+        FileWriter fw = new FileWriter("src/team49/Database/" + fileName + ".txt", true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        PrintWriter pw = new PrintWriter(bw);
+        pw.println(input);
+        pw.flush();
+        fw.close();
+        bw.close();
+        pw.close();
+	}
+	
 	// reads current data in text file, assembles an array, and returns said array
 	public String[] getCurrentData() throws FileNotFoundException {
 		String[] currentData = new String[countLines()];
-		inFile = new Scanner(new FileReader("src/application/Database/" + fileName + ".txt"));
+		inFile = new Scanner(new FileReader("src/team49/Database/" + fileName + ".txt"));
 		for(int ii = 0; ii < currentData.length; ii++) {
 			currentData[ii] = inFile.nextLine(); 
 		}
@@ -77,7 +90,7 @@ public class Database {
 	
 	// wipes the file and prepares to update/rewrite data
 	private void clearFile() throws IOException {
-		outFile = new FileWriter("src/application/Database/" + fileName + ".txt");
+		outFile = new FileWriter("src/team49/Database/" + fileName + ".txt");
 		int fileLength = countLines();
 		for (int ii = 0; ii <= fileLength; ii++) {
 			outFile.write("");
